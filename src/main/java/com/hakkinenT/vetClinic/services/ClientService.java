@@ -4,6 +4,8 @@ import com.hakkinenT.vetClinic.dto.ClientDTO;
 import com.hakkinenT.vetClinic.entities.Address;
 import com.hakkinenT.vetClinic.entities.Client;
 import com.hakkinenT.vetClinic.repositories.ClientRepository;
+import com.hakkinenT.vetClinic.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,14 +18,14 @@ public class ClientService {
     @Transactional
     public ClientDTO insert(ClientDTO dto){
         Client client = new Client();
-        copyEntityToDto(dto, client, null);
+        copyDtoToEntity(dto, client, null);
 
         client = clientRepository.save(client);
 
         return new ClientDTO(client);
     }
 
-    private void copyEntityToDto(ClientDTO dto, Client client, Address address){
+    private void copyDtoToEntity(ClientDTO dto, Client client, Address address){
         client.setName(dto.getName());
         client.setEmail(dto.getEmail());
         client.setPhone(dto.getPhone());
@@ -40,5 +42,21 @@ public class ClientService {
         address.setZipCode(dto.getAddress().getZipCode());
 
         client.setAddress(address);
+    }
+
+    @Transactional
+    public ClientDTO update(Long id, ClientDTO dto){
+        try {
+            Client client = clientRepository.getReferenceById(id);
+            Address address = new Address();
+            address.setId(client.getAddress().getId());
+
+            copyDtoToEntity(dto, client, address);
+
+            client = clientRepository.save(client);
+            return new ClientDTO(client);
+        }catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException("Recurso não encontrado.");
+        }
     }
 }
