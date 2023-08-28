@@ -16,11 +16,22 @@ public class ClientService {
     @Transactional
     public ClientDTO insert(ClientDTO dto){
         Client client = new Client();
+        copyEntityToDto(dto, client, null);
+
+        client = clientRepository.save(client);
+
+        return new ClientDTO(client);
+    }
+
+    private void copyEntityToDto(ClientDTO dto, Client client, Address address){
         client.setName(dto.getName());
         client.setEmail(dto.getEmail());
         client.setPhone(dto.getPhone());
 
-        Address address = new Address();
+        if(address == null){
+            address = new Address();
+        }
+
         address.setStreet(dto.getAddress().getStreet());
         address.setNumber(dto.getAddress().getNumber());
         address.setCity(dto.getAddress().getCity());
@@ -29,9 +40,5 @@ public class ClientService {
         address.setZipCode(dto.getAddress().getZipCode());
 
         client.setAddress(address);
-
-        client = clientRepository.save(client);
-
-        return new ClientDTO(client);
     }
 }
