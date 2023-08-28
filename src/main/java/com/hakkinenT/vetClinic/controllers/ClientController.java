@@ -29,4 +29,10 @@ public class ClientController {
         dto = clientService.update(id, dto);
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ClientDTO> findById(@PathVariable Long id){
+        ClientDTO dto = clientService.findById(id);
+        return ResponseEntity.ok(dto);
+    }
 }

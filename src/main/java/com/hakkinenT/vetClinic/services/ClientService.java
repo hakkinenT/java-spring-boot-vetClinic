@@ -16,7 +16,7 @@ public class ClientService {
     private ClientRepository clientRepository;
 
     @Transactional
-    public ClientDTO insert(ClientDTO dto){
+    public ClientDTO insert(ClientDTO dto) {
         Client client = new Client();
         copyDtoToEntity(dto, client, null);
 
@@ -25,12 +25,12 @@ public class ClientService {
         return new ClientDTO(client);
     }
 
-    private void copyDtoToEntity(ClientDTO dto, Client client, Address address){
+    private void copyDtoToEntity(ClientDTO dto, Client client, Address address) {
         client.setName(dto.getName());
         client.setEmail(dto.getEmail());
         client.setPhone(dto.getPhone());
 
-        if(address == null){
+        if (address == null) {
             address = new Address();
         }
 
@@ -45,7 +45,7 @@ public class ClientService {
     }
 
     @Transactional
-    public ClientDTO update(Long id, ClientDTO dto){
+    public ClientDTO update(Long id, ClientDTO dto) {
         try {
             Client client = clientRepository.getReferenceById(id);
             Address address = new Address();
@@ -55,8 +55,17 @@ public class ClientService {
 
             client = clientRepository.save(client);
             return new ClientDTO(client);
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado.");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public ClientDTO findById(Long id) {
+        Client client = clientRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado."));
+        return new ClientDTO(client);
+
     }
 }
