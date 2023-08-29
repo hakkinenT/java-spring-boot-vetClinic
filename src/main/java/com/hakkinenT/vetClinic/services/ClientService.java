@@ -70,6 +70,15 @@ public class ClientService {
 
     }
 
+    @Transactional(readOnly = true)
+    public ClientDTO findByName(String name) {
+        Client client = clientRepository
+                .findByNameContainingIgnoreCase(name)
+                .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado."));
+        return new ClientDTO(client);
+
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id){
         if(!clientRepository.existsById(id)){
