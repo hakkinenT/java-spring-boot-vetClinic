@@ -8,6 +8,7 @@ import com.hakkinenT.vetClinic.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -67,5 +68,14 @@ public class ClientService {
                 .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado."));
         return new ClientDTO(client);
 
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id){
+        if(!clientRepository.existsById(id)){
+            throw new ResourceNotFoundException("Recurso não encontrado.");
+        }
+
+        clientRepository.deleteById(id);
     }
 }
