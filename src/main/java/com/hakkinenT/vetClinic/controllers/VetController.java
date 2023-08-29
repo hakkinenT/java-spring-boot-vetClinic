@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/vets")
@@ -29,5 +30,12 @@ public class VetController {
         dto = vetService.update(id, dto);
 
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<VetDTO>> findAll(){
+        List<VetDTO> vets = vetService.findAll();
+
+        return ResponseEntity.ok(vets);
     }
 }
