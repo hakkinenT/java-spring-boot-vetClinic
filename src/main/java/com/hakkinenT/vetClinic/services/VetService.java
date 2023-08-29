@@ -4,6 +4,8 @@ import com.hakkinenT.vetClinic.dto.VetDTO;
 import com.hakkinenT.vetClinic.entities.Address;
 import com.hakkinenT.vetClinic.entities.Vet;
 import com.hakkinenT.vetClinic.repositories.VetRepository;
+import com.hakkinenT.vetClinic.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,5 +42,22 @@ public class VetService {
         address.setState(dto.getAddress().getState());
 
         vet.setAddress(address);
+    }
+
+    @Transactional
+    public VetDTO update(Long id, VetDTO dto){
+        try{
+            Vet vet = vetRepository.getReferenceById(id);
+            Address address = new Address();
+            address.setId(vet.getAddress().getId());
+
+            copyDtoToEntity(dto, vet, address);
+
+            vet = vetRepository.save(vet);
+
+            return new VetDTO(vet);
+        }catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
     }
 }
