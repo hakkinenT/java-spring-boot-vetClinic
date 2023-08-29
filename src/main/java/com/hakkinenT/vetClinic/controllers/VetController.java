@@ -45,4 +45,10 @@ public class VetController {
 
         return ResponseEntity.ok(dto);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        vetService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
