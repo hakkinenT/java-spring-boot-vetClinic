@@ -7,6 +7,8 @@ import com.hakkinenT.vetClinic.repositories.VetRepository;
 import com.hakkinenT.vetClinic.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,10 +68,10 @@ public class VetService {
     }
 
     @Transactional(readOnly = true)
-    public List<VetDTO> findAll() {
-        List<Vet> vets = vetRepository.findAll();
+    public Page<VetDTO> findAll(Pageable pageable) {
+        Page<Vet> vets = vetRepository.findAll(pageable);
 
-        return vets.stream().map(vet -> new VetDTO(vet)).collect(Collectors.toList());
+        return vets.map(vet -> new VetDTO(vet));
     }
 
     @Transactional(readOnly = true)
