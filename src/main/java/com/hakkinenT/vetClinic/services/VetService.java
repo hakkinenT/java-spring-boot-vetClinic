@@ -19,7 +19,7 @@ public class VetService {
     private VetRepository vetRepository;
 
     @Transactional
-    public VetDTO insert(VetDTO dto){
+    public VetDTO insert(VetDTO dto) {
         Vet vet = new Vet();
         copyDtoToEntity(dto, vet, null);
 
@@ -28,12 +28,12 @@ public class VetService {
         return new VetDTO(vet);
     }
 
-    private void copyDtoToEntity(VetDTO dto, Vet vet, Address address){
+    private void copyDtoToEntity(VetDTO dto, Vet vet, Address address) {
         vet.setName(dto.getName());
         vet.setEmail(dto.getEmail());
         vet.setPhone(dto.getPhone());
 
-        if(address == null){
+        if (address == null) {
             address = new Address();
         }
 
@@ -48,8 +48,8 @@ public class VetService {
     }
 
     @Transactional
-    public VetDTO update(Long id, VetDTO dto){
-        try{
+    public VetDTO update(Long id, VetDTO dto) {
+        try {
             Vet vet = vetRepository.getReferenceById(id);
             Address address = new Address();
             address.setId(vet.getAddress().getId());
@@ -59,15 +59,24 @@ public class VetService {
             vet = vetRepository.save(vet);
 
             return new VetDTO(vet);
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
     }
 
     @Transactional(readOnly = true)
-    public List<VetDTO> findAll(){
+    public List<VetDTO> findAll() {
         List<Vet> vets = vetRepository.findAll();
 
         return vets.stream().map(vet -> new VetDTO(vet)).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public VetDTO findById(Long id) {
+        Vet vet = vetRepository.findById(id)
+                                .orElseThrow(
+                                        () -> new ResourceNotFoundException("Recurso não encontrado."));
+
+        return new VetDTO(vet);
     }
 }

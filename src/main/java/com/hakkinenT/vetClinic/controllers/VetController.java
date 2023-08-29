@@ -38,4 +38,11 @@ public class VetController {
 
         return ResponseEntity.ok(vets);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VetDTO> findById(@PathVariable Long id){
+        VetDTO dto = vetService.findById(id);
+
+        return ResponseEntity.ok(dto);
+    }
 }
