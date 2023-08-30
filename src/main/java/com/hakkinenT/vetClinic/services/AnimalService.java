@@ -55,4 +55,21 @@ public class AnimalService {
         animal.setSpecies(species);
 
     }
+
+    @Transactional
+    public AnimalDTO update(Long id, AnimalDTO dto){
+        try{
+            Animal animal = animalRepository.getReferenceById(id);
+
+            animal.setName(dto.getName());
+            animal.setAge(dto.getAge());
+            animal.setGender(AnimalGender.valueOf(dto.getGender()));
+
+            animal = animalRepository.save(animal);
+
+            return new AnimalDTO(animal);
+        }catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException("Recurso não encontrado.");
+        }
+    }
 }
