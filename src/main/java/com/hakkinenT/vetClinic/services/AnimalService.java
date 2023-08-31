@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AnimalService {
     @Autowired
@@ -71,5 +74,14 @@ public class AnimalService {
         }catch (EntityNotFoundException e){
             throw new ResourceNotFoundException("Recurso não encontrado.");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<AnimalDTO> searchAllAnimalByClientName(String name){
+
+        List<AnimalDTO> animals = animalRepository.searchAllAnimalByClientName(name);
+
+
+        return animals;
     }
 }
