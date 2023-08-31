@@ -3,6 +3,7 @@ package com.hakkinenT.vetClinic.services;
 import com.hakkinenT.vetClinic.dto.ClientDTO;
 import com.hakkinenT.vetClinic.entities.Address;
 import com.hakkinenT.vetClinic.entities.Client;
+import com.hakkinenT.vetClinic.repositories.AnimalRepository;
 import com.hakkinenT.vetClinic.repositories.ClientRepository;
 import com.hakkinenT.vetClinic.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private AnimalRepository animalRepository;
 
     @Transactional
     public ClientDTO insert(ClientDTO dto) {
@@ -79,12 +83,13 @@ public class ClientService {
 
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional
     public void delete(Long id){
         if(!clientRepository.existsById(id)){
             throw new ResourceNotFoundException("Recurso não encontrado.");
         }
 
+        animalRepository.deleteAllAnimalsByClientId(id);
         clientRepository.deleteById(id);
     }
 }
