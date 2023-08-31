@@ -12,6 +12,7 @@ import com.hakkinenT.vetClinic.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -83,5 +84,14 @@ public class AnimalService {
 
 
         return animals;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id){
+        if(!animalRepository.existsById(id)){
+            throw new ResourceNotFoundException("Recurso não encontrado.");
+        }
+
+        animalRepository.deleteById(id);
     }
 }
