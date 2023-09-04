@@ -24,7 +24,9 @@ O projeto consiste na implementação de uma API REST para gerenciar os atendime
 
 # Tecnologias utilizadas
 - Java
-- Java Spring Boot
+- Spring Boot
+- JPA / Hibernate
+- Maven
 
 # Como executar o projeto
 Pré-requisito mínimo: Java 17
