@@ -2,6 +2,8 @@ package com.hakkinenT.vetClinic.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -17,6 +19,9 @@ public class Vet {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @OneToMany(mappedBy = "vet")
+    private List<Appointment> appointments = new ArrayList<>();
 
     public Vet() {
     }
@@ -67,6 +72,10 @@ public class Vet {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
     }
 
     @Override
